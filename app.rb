@@ -28,19 +28,39 @@ class SessionUser
   end
 end
 
-
 helpers do
   def current_user
     @current_user ||= SessionUser.new(session)
   end
 end
 
+before do
+  if current_user.logged_in?
+    Twitter.configure do |config|
+      config.consumer_key = ENV['CONSUMER_KEY']
+      config.consumer_secret = ENV['CONSUMER_SECRET']
+      config.oauth_token = current_user.oauth_token
+      config.oauth_token_secret = current_user.oauth_token_secret
+    end
+  end
+end
+
 get '/' do
   if current_user.logged_in?
-    "Hi #{current_user.id}! <a href='/sign_out'>sign out</a>"
+    erb :query
   else
-    '<a href="/sign_in">sign in with Twitter</a>'
+    erb :welcome
   end
+end
+
+get '/comparison' do
+  return redirect '/' unless current_user.logged_in?
+
+  @user_1 = params[:user_1]
+  @user_2 = params[:user_2]
+  @common_friend_ids = Twitter.friend_ids(@user_1).to_a & Twitter.friend_ids(@user_2).to_a
+
+  erb :comparison
 end
 
 get '/auth/:name/callback' do
@@ -53,6 +73,6 @@ get '/sign_in/?' do
 end
 
 get '/sign_out' do
-  session_end!
+  session.clear
   redirect '/'
 end

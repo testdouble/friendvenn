@@ -1,0 +1,9 @@
+<div class="summary">
+  Woah, <%= @user_1 %> and <%= @user_2 %> have <%= @common_friend_ids.size %> friends in common!
+</div>
+
+<div class="common-friends">
+  <% @common_friend_ids.each do |id| %>
+    <%= id %><br/>
+  <% end %>
+</div>
