@@ -69,9 +69,9 @@ get '/comparison' do
 
   #yank the two users being compared out of the result set
   @common_friends.delete_if do |user|
-    if params[:user_1] == user.handle
+    if params[:user_1].downcase == user.handle.downcase
       @user_1 = user
-    elsif params[:user_2] == user.handle
+    elsif params[:user_2].downcase == user.handle.downcase
       @user_2 = user
     end
   end
