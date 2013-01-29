@@ -5,4 +5,10 @@ gem 'omniauth-twitter'
 gem 'twitter'
 gem 'sinatra'
 
-gem 'debugger'
+group :production do
+  gem 'unicorn'
+end
+
+group :development do
+  gem 'debugger'
+end
