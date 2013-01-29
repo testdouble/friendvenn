@@ -1,9 +1,18 @@
 <div class="summary">
-  Woah, <%= @user_1 %> and <%= @user_2 %> have <%= @common_friend_ids.size %> friends in common!
+  Woah, <%= @user_1.handle %> and <%= @user_2.handle %> have <%= @common_friends.size %> friends in common!
 </div>
 
-<div class="common-friends">
-  <% @common_friend_ids.each do |id| %>
-    <%= id %><br/>
+<ul class="common-friends">
+  <% @common_friends.each do |friend| %>
+    <li><a href="http://twitter.com/<%= friend.handle %>">@<%= friend.handle %></a></li>
   <% end %>
+</ul>
+
+<div class="actions">
+  <p>
+    <a href="/">Back</a>
+  </p>
+  <p>
+    <a href="/sign_out">Sign Out</a>
+  </p>
 </div>

@@ -56,9 +56,25 @@ end
 get '/comparison' do
   return redirect '/' unless current_user.logged_in?
 
-  @user_1 = params[:user_1]
-  @user_2 = params[:user_2]
-  @common_friend_ids = Twitter.friend_ids(@user_1).to_a & Twitter.friend_ids(@user_2).to_a
+  #find the common friends
+  common_friend_ids = Twitter.friend_ids(params[:user_1]).to_a & Twitter.friend_ids(params[:user_2]).to_a
+
+  #cram the two users being compared into the query group
+  ids_to_search = Twitter.users([params[:user_1], params[:user_2]] + common_friend_ids)
+
+  #search for the common friend details in 100-friend chunks
+  @common_friends = ids_to_search.each_slice(Twitter::API::Users::MAX_USERS_PER_REQUEST).map do |group|
+    Twitter.users(group)
+  end.flatten.sort_by(&:handle)
+
+  #yank the two users being compared out of the result set
+  @common_friends.delete_if do |user|
+    if params[:user_1] == user.handle
+      @user_1 = user
+    elsif params[:user_2] == user.handle
+      @user_2 = user
+    end
+  end
 
   erb :comparison
 end
