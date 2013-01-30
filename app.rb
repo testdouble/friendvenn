@@ -54,7 +54,7 @@ get '/' do
 end
 
 get '/comparison' do
-  return redirect '/' unless valid_comparison?
+  return erb :query unless valid_comparison?
 
   user_1_name = params[:user_1].gsub('@','')
   user_2_name = params[:user_2].gsub('@','')
