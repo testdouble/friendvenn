@@ -57,7 +57,7 @@ body {
   position: absolute;
   bottom: 0px;
   text-align: center;
-  width: 95%;
+  width: 100%;
   background: black;
   color: white;
 }
@@ -116,4 +116,23 @@ body {
   min-height: 150px;
   background: silver;
   overflow: hidden;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.actions {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+}
+
+.actions a {
+  color: #fdab52;
+}
+
+#sign-out {
+  float: right;
 }
