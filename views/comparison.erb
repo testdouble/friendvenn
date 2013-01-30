@@ -5,14 +5,14 @@
   </div>
 
   <div class="summary">
-    Woah, <%= @user_1.handle %> and <%= @user_2.handle %> have <%= @common_friends.size %> friends in common!
+    Woah, @<%= @user_1.handle %> and @<%= @user_2.handle %> have <%= @common_friends.size %> friends in common!
   </div>
 
   <ul id="characters">
     <% @common_friends.each do |friend| %>
       <li class="opponent">
         <a href="http://twitter.com/<%= friend.handle %>">
-          <span class="handle">@<%= friend.handle %></span>
+          <span class="handle">@<%= friend.handle.downcase %></span>
           <img src="<%= friend.profile_image_url %>" alt="<%= friend.handle %>" class="avatar">
         </a>
       </li>
