@@ -1,0 +1,99 @@
+* { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+
+div, body, ul, li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+body {
+  padding-top: 20px;
+  background: #000177;
+}
+
+.twitter-auth {
+  width: 180px;
+}
+
+#sign-in {
+  text-align: center;
+}
+
+#player-select {
+  text-align: center;
+  font-size: 3em;
+  color: #fdab52;
+}
+
+#map {
+  text-align: center;
+}
+
+#map img {
+  width: 600px;
+}
+
+#results .player .title {
+  padding-top: 30px;
+  font-size: 4em;
+}
+
+.player {
+  width: 30%;
+  text-align: center;
+  min-height: 150px;
+}
+
+.opponent {
+  width: 11.25%;
+  height: 105px;
+  background: black;
+  float: left;
+  margin: 2px;
+}
+
+.vs img {
+  width: 188px;
+}
+
+.player {
+  display: inline-block;
+  vertical-align: top;
+}
+
+#combatants {
+  text-align: center;
+}
+
+#combatants .player {
+  width: 30%;
+  margin-top: 0px;
+}
+
+#combatants .vs {
+  width: 20%;
+  display: inline-block;
+}
+
+.player input {
+  width: 60%;
+  height: 40px;
+  font-size: 1em;
+  text-align: center;
+}
+
+#fight {
+  text-align: center;
+}
+
+.player .title {
+  color: #fdab52;
+  font-size: 3em;
+}
+
+#characters {
+  padding: 2px;
+  min-height: 150px;
+  background: silver;
+  overflow: hidden;
+}
