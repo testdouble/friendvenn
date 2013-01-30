@@ -2,12 +2,12 @@
   <div id="combatants">
     <div id="player-one" class="player">
       <div class="title">Player One</div>
-      <input type="text" name="user_1" placeholder="@dmosher">
+      <input type="text" name="user_1" placeholder="@dmosher" value="<%= params[:user_1] %>">
     </div>
     <img src="/img/vs.png" class="vs">
     <div id="player-two" class="player">
       <div class="title">Player Two</div>
-      <input type="text" name="user_2" placeholder="@searls">
+      <input type="text" name="user_2" placeholder="@searls" value="<%= params[:user_2] %>">
     </div>
   </div>
   <div id="fight">
