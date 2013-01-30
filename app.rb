@@ -68,7 +68,7 @@ get '/comparison' do
   #search for the common friend details in 100-friend chunks
   @common_friends = ids_to_search.each_slice(Twitter::API::Users::MAX_USERS_PER_REQUEST).map do |group|
     Twitter.users(group)
-  end.flatten.sort_by(&:handle)
+  end.flatten.sort_by {|u| u.handle.downcase }
 
   #yank the two users being compared out of the result set
   @common_friends.delete_if do |user|
