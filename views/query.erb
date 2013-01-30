@@ -1,6 +1,18 @@
 <form action="/comparison" method="get">
-  Compare <input name="user_1"/> and <input name="user_2"/>
-  <input type="submit" value="Compare Follows"/>
+  <div id="combatants">
+    <div id="player-one" class="player">
+      <div class="title">Player One</div>
+      <input type="text" name="user_1" placeholder="@dmosher">
+    </div>
+    <img src="/img/vs.png" class="vs">
+    <div id="player-two" class="player">
+      <div class="title">Player Two</div>
+      <input type="text" name="user_2" placeholder="@searls">
+    </div>
+  </div>
+  <div id="fight">
+    <input type="image" src="/img/fight.png">
+  </div>
 </form>
 
 <div>

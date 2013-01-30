@@ -1,18 +1,25 @@
-<div class="summary">
-  Woah, <%= @user_1.handle %> and <%= @user_2.handle %> have <%= @common_friends.size %> friends in common!
-</div>
+<div id="results">
+  <div class="summary">
+    Woah, <%= @user_1.handle %> and <%= @user_2.handle %> have <%= @common_friends.size %> friends in common!
+  </div>
 
-<ul class="common-friends">
-  <% @common_friends.each do |friend| %>
-    <li><a href="http://twitter.com/<%= friend.handle %>">@<%= friend.handle %></a></li>
-  <% end %>
-</ul>
+  <ul id="characters">
+    <% @common_friends.each do |friend| %>
+      <li>
+        <a href="http://twitter.com/<%= friend.handle %>">
+          <span class="handle">@<%= friend.handle %></span>
+          <img src="<%= friend.profile_image_url %>" alt="<%= friend.handle %>" class="avatar">
+        </a>
+      </li>
+    <% end %>
+  </ul>
 
-<div class="actions">
-  <p>
-    <a href="/">Back</a>
-  </p>
-  <p>
-    <a href="/sign_out">Sign Out</a>
-  </p>
+  <div class="actions">
+    <p>
+      <a href="/">Back</a>
+    </p>
+    <p>
+      <a href="/sign_out">Sign Out</a>
+    </p>
+  </div>
 </div>
