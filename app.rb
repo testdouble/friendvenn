@@ -54,6 +54,7 @@ get '/' do
 end
 
 get '/comparison' do
+  return redirect '/' unless current_user.logged_in?
   return erb :query unless valid_comparison?
 
   user_1_name = params[:user_1].gsub('@','')
@@ -97,7 +98,7 @@ get '/sign_out' do
 end
 
 def valid_comparison?
-  current_user.logged_in? && param_defined?(:user_1) && param_defined?(:user_2)
+  param_defined?(:user_1) && param_defined?(:user_2)
 end
 
 def param_defined?(name)
