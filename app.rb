@@ -54,7 +54,7 @@ get '/' do
 end
 
 get '/comparison' do
-  return redirect '/' unless current_user.logged_in?
+  return redirect '/' unless valid_comparison?
 
   user_1_name = params[:user_1].gsub('@','')
   user_2_name = params[:user_2].gsub('@','')
@@ -94,4 +94,12 @@ end
 get '/sign_out' do
   session.clear
   redirect '/'
+end
+
+def valid_comparison?
+  current_user.logged_in? && param_defined?(:user_1) && param_defined?(:user_2)
+end
+
+def param_defined?(name)
+  params[name] && !params[name].empty?
 end
