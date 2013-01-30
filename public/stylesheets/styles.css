@@ -19,7 +19,7 @@ body {
   text-align: center;
 }
 
-#player-select {
+#player-select, .summary {
   text-align: center;
   font-size: 3em;
   color: #fdab52;
@@ -45,11 +45,31 @@ body {
 }
 
 .opponent {
-  width: 11.25%;
-  height: 105px;
-  background: black;
   float: left;
   margin: 2px;
+  border: 1px solid black;
+  position: relative;
+  max-width: 150px;
+}
+
+.opponent .handle {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  text-align: center;
+  width: 95%;
+  background: black;
+  color: white;
+}
+
+.opponent img {
+  height: 110px;
+}
+
+.opponent a {
+  height: 110px;
+  display: block;
+  overflow: hidden;
 }
 
 .vs img {
