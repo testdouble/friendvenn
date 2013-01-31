@@ -4,6 +4,7 @@ require 'twitter'
 require 'sinatra'
 
 use OmniAuth::Strategies::Twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
+use Rack::Logger
 
 enable :sessions
 
@@ -31,6 +32,10 @@ end
 helpers do
   def current_user
     @current_user ||= SessionUser.new(session)
+  end
+
+  def logger
+    request.logger
   end
 end
 
