@@ -2,8 +2,12 @@ require 'omniauth'
 require 'omniauth-twitter'
 require 'twitter'
 require 'sinatra'
+require 'dalli'
+require 'memcachier'
+require 'ostruct'
 
 use OmniAuth::Strategies::Twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
+use Rack::Logger
 
 enable :sessions
 
@@ -32,6 +36,14 @@ helpers do
   def current_user
     @current_user ||= SessionUser.new(session)
   end
+
+  def logger
+    request.logger
+  end
+
+  def cache
+    settings.cache
+  end
 end
 
 before do
@@ -44,6 +56,8 @@ before do
     end
   end
 end
+
+set :cache, Dalli::Client.new(nil, :expires_in => 3600)
 
 get '/' do
   if current_user.logged_in?
@@ -61,24 +75,12 @@ get '/comparison' do
   user_2_name = params[:user_2].gsub('@','')
 
   #find the common friends
-  common_friend_ids = Twitter.friend_ids(user_1_name).to_a & Twitter.friend_ids(user_2_name).to_a
+  common_friend_ids = fetch_friend_ids(user_1_name) & fetch_friend_ids(user_2_name)
 
-  #cram the two users being compared into the query group
-  ids_to_search = Twitter.users([user_1_name, user_2_name] + common_friend_ids)
-
-  #search for the common friend details in 100-friend chunks
-  @common_friends = ids_to_search.each_slice(Twitter::API::Users::MAX_USERS_PER_REQUEST).map do |group|
-    Twitter.users(group)
-  end.flatten.sort_by {|u| u.handle.downcase }
-
-  #yank the two users being compared out of the result set
-  @common_friends.delete_if do |user|
-    if user_1_name.downcase == user.handle.downcase
-      @user_1 = user
-    elsif user_2_name.downcase == user.handle.downcase
-      @user_2 = user
-    end
-  end
+  user_keys = [:id, :handle, :profile_image_url]
+  @common_friends = fetch_users(common_friend_ids, user_keys).sort_by{ |u| u.handle.downcase }
+  @user_1         = fetch_users([user_1_name], user_keys).first
+  @user_2         = fetch_users([user_2_name], user_keys).first
 
   erb :comparison
 end
@@ -103,4 +105,64 @@ end
 
 def param_defined?(name)
   params[name] && !params[name].empty?
+end
+
+def fetch_friend_ids(user_id)
+  cache.fetch("twitter:friend_ids:#{user_id}") {
+    Twitter.friend_ids(user_id).to_a
+  }
+end
+
+def fetch_users(user_ids, include_keys)
+  cached_users = []
+  ids_to_prime = []
+
+  user_ids.each do |user_id|
+    user = fetch_user(user_id, include_keys)
+    if user
+      cached_users << user
+    else
+      ids_to_prime << user_id
+    end
+  end
+
+  # get the remainder of the users from the twitter api, and cache them,
+  # and add them to the cached user list. Wow... this does a lot of stuff
+  get_users_from_twitter(ids_to_prime).each do |user|
+    user_attributes = strip_user(user, include_keys)
+    cache_user(user_attributes, include_keys)
+    cached_users << user_attributes
+  end
+
+  # make the user hashes "objecty"
+  cached_users.map do |user|
+    OpenStruct.new(user)
+  end
+end
+
+def strip_user(user, include_keys)
+  user_attributes = include_keys.reduce({}) do |attrs, key|
+    attrs[key] = user.send(key)
+    attrs
+  end
+end
+
+def user_cache_key(user_id, include_keys)
+  "twitter:users:#{user_id}:#{include_keys.hash}"
+end
+
+def fetch_user(user_id, include_keys)
+  cache.get(user_cache_key(user_id, include_keys))
+end
+
+# cache a user by both id and handle
+def cache_user(user, include_keys)
+  cache.set(user_cache_key(user['id'], include_keys), user)
+  cache.set(user_cache_key(user['handle'], include_keys), user)
+end
+
+def get_users_from_twitter(user_ids)
+  user_ids.each_slice(Twitter::API::Users::MAX_USERS_PER_REQUEST).map do |group|
+    Twitter.users(*group, :method => :get)
+  end.flatten
 end
