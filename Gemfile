@@ -5,6 +5,7 @@ gem 'omniauth-twitter'
 gem 'twitter'
 gem 'sinatra'
 gem 'dalli'
+gem 'memcachier'
 
 group :production do
   gem 'unicorn'

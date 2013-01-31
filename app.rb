@@ -3,6 +3,7 @@ require 'omniauth-twitter'
 require 'twitter'
 require 'sinatra'
 require 'dalli'
+require 'memcachier'
 require 'json'
 require 'ostruct'
 
