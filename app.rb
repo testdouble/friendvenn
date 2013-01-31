@@ -64,7 +64,7 @@ get '/comparison' do
   common_friend_ids = Twitter.friend_ids(user_1_name).to_a & Twitter.friend_ids(user_2_name).to_a
 
   #cram the two users being compared into the query group
-  ids_to_search = Twitter.users([user_1_name, user_2_name] + common_friend_ids)
+  ids_to_search = [user_1_name, user_2_name] + common_friend_ids
 
   #search for the common friend details in 100-friend chunks
   @common_friends = ids_to_search.each_slice(Twitter::API::Users::MAX_USERS_PER_REQUEST).map do |group|
