@@ -4,7 +4,6 @@ require 'twitter'
 require 'sinatra'
 require 'dalli'
 require 'memcachier'
-require 'json'
 require 'ostruct'
 
 use OmniAuth::Strategies::Twitter, ENV['CONSUMER_KEY'], ENV['CONSUMER_SECRET']
@@ -58,7 +57,7 @@ before do
   end
 end
 
-set :cache, Dalli::Client.new("localhost:11211", :serializer => JSON, :expires_in => 3600)
+set :cache, Dalli::Client.new(nil, :expires_in => 3600)
 
 get '/' do
   if current_user.logged_in?
